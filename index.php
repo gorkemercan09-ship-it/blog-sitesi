@@ -5,6 +5,11 @@ require_once 'includes/functions.php';
 
 $database = new Database();
 $db = $database->getConnection();
+
+if (!$db) {
+    die("Veritabanına bağlanılamadı. Lütfen sunucu (Vercel) ayarlarınızı (Environment Variables) kontrol edin.");
+}
+
 logTraffic($db, 'Home Page');
 
 // Kategoriler
@@ -332,7 +337,8 @@ $site_title = getSetting('site_title') ?: 'Antigravity Blog';
             ?></a>
             <div style="display: flex; gap: 2rem; align-items: center;">
                 <a href="index.php" style="text-decoration: none; color: var(--dark); font-weight: 500;">Ana Sayfa</a>
-                <a href="categories.php" style="text-decoration: none; color: var(--dark); font-weight: 500;">Kategoriler</a>
+                <a href="categories.php"
+                    style="text-decoration: none; color: var(--dark); font-weight: 500;">Kategoriler</a>
             </div>
         </div>
     </nav>
@@ -474,7 +480,8 @@ $site_title = getSetting('site_title') ?: 'Antigravity Blog';
                             <div>
                                 <h5
                                     style="font-size: 0.875rem; font-weight: 600; line-height: 1.2; margin-bottom: 0.25rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                                    <?php echo $latest['title']; ?></h5>
+                                    <?php echo $latest['title']; ?>
+                                </h5>
                                 <span
                                     style="font-size: 0.75rem; color: var(--gray);"><?php echo date('d.m.Y', strtotime($latest['created_at'])); ?></span>
                             </div>
@@ -493,7 +500,8 @@ $site_title = getSetting('site_title') ?: 'Antigravity Blog';
                             <div>
                                 <h5
                                     style="font-size: 0.875rem; font-weight: 600; line-height: 1.2; margin-bottom: 0.25rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                                    <?php echo $pop['title']; ?></h5>
+                                    <?php echo $pop['title']; ?>
+                                </h5>
                                 <span
                                     style="font-size: 0.75rem; color: var(--primary); font-weight: 600;"><?php echo $pop['views_count']; ?>
                                     izlenme</span>
@@ -516,7 +524,8 @@ $site_title = getSetting('site_title') ?: 'Antigravity Blog';
                     if (isset($title_parts[1]))
                         echo "<span>" . htmlspecialchars($title_parts[1]) . "</span>";
                     ?></a>
-                <p style="color: var(--gray); font-size: 0.9375rem;"><?php echo htmlspecialchars(getSetting('site_description')); ?></p>
+                <p style="color: var(--gray); font-size: 0.9375rem;">
+                    <?php echo htmlspecialchars(getSetting('site_description')); ?></p>
             </div>
             <div>
                 <h5 style="font-weight: 700; margin-bottom: 1.5rem;">Hızlı Bağlantılar</h5>
