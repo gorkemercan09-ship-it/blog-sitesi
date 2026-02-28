@@ -43,6 +43,7 @@ class Database
 
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
         } catch (PDOException $exception) {
             error_log($exception->getMessage());
             echo "Veritabanı bağlantı hatası Detay: " . $exception->getMessage() . "<br>Host: " . $this->host . "<br>Port: " . $this->port . "<br>DB: " . $this->db_name . "<br>User: " . $this->username . "<br>Type: " . $db_type;
