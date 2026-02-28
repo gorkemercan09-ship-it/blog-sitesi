@@ -38,8 +38,13 @@ function checkLogin()
     }
 }
 
+// includes/functions.php
+
 function logTraffic($db, $page)
 {
+    if (!$db)
+        return false;
+
     if (!isset($_SERVER['HTTP_USER_AGENT']))
         return false;
 
@@ -81,19 +86,24 @@ function logTraffic($db, $page)
 
     $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 
-    // Aynı IP ve aynı sayfa için mükerrer kaydı tamamen engelle (Bir IP bir sayfayı sadece 1 kez kaydeder)
-    $stmt = $db->prepare("SELECT id FROM traffic WHERE ip_address = :ip AND page_visited = :page LIMIT 1");
-    $stmt->execute(['ip' => $ip, 'page' => $page]);
-    if ($stmt->fetch()) {
+    try {
+        // Aynı IP ve aynı sayfa için mükerrer kaydı tamamen engelle
+        $stmt = $db->prepare("SELECT id FROM traffic WHERE ip_address = :ip AND page_visited = :page LIMIT 1");
+        $stmt->execute(['ip' => $ip, 'page' => $page]);
+        if ($stmt->fetch()) {
+            return false;
+        }
+
+        $stmt = $db->prepare("INSERT INTO traffic (ip_address, user_agent, page_visited) VALUES (:ip, :agent, :page)");
+        $stmt->bindParam(':ip', $ip);
+        $stmt->bindParam(':agent', $agent);
+        $stmt->bindParam(':page', $page);
+        return $stmt->execute();
+    } catch (PDOException $e) {
         return false;
     }
-
-    $stmt = $db->prepare("INSERT INTO traffic (ip_address, user_agent, page_visited) VALUES (:ip, :agent, :page)");
-    $stmt->bindParam(':ip', $ip);
-    $stmt->bindParam(':agent', $agent);
-    $stmt->bindParam(':page', $page);
-    return $stmt->execute();
 }
+
 
 function getSetting($key)
 {
