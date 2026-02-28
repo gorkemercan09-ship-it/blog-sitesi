@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS admins (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255),
+    profile_image VARCHAR(255),
     last_login_at TIMESTAMP NULL DEFAULT NULL
 ) ENGINE=InnoDB;
 
@@ -25,13 +27,15 @@ CREATE TABLE IF NOT EXISTS posts (
     content LONGTEXT NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
     category_id INT,
+    author_id INT,
     views_count INT DEFAULT 0,
     status ENUM('draft', 'published') DEFAULT 'draft',
     is_featured BOOLEAN DEFAULT FALSE,
     image VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+    FOREIGN KEY (author_id) REFERENCES admins(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 -- Traffic Table
